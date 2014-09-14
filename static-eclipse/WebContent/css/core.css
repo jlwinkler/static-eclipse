@@ -1,0 +1,140 @@
+@CHARSET "ISO-8859-1";
+/* core tag styles */
+/* 
+ * some useful colors
+ * - DMi blue: #003e83
+ * - darkest gray in DMi page background fade: #a7a7a7
+ * - left sidebar light green: #b4c349
+ * - light blue at top of info buckets: #4d79b3
+ * - dark blue at bottom of info buckets: #023f84
+ */
+body {
+	background: url(../css-images/gray-background.png) repeat-x;
+	background-color: #a7a7a7;
+	color: #003e83;
+	font:12px arial, sans-serif;
+	font-weight:700;
+}
+
+div,
+h1 {
+	text-align: left;
+	padding: 1%;
+	background-color: #fff;
+}
+
+div {
+	border-radius: 5px;
+}
+
+/* class css */
+.outline {
+	outline: solid 1px #003e83;
+}
+
+/* id css */
+
+/*
+ * shared styles
+ */
+div#container-no-float,
+div#container-basic-float,
+div#container-awesome-float {
+	width: 750px;
+	margin-right: auto;
+	background: url(../css-images/bg_inner_nav.png) repeat-y ;
+	background-color: #b4c349;
+}
+
+#container-no-float div.clear,
+#container-awesome-float div.clear {
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+#container-basic-float #left-sidebar,
+#container-awesome-float #left-sidebar {
+	float: left;
+	width: 19%;
+}
+#container-basic-float #focus,
+#container-awesome-float #focus {
+	float: left;
+	width: 76%;
+	margin-left: 1%;
+}
+#container-basic-float #focus-content,
+#container-awesome-float #focus-content {
+	float: left;
+	width: 76%;
+}
+#container-basic-float #focus-right-sidebar,
+#container-awesome-float #focus-right-sidebar {
+	float: left;
+	width: 19%;
+	margin-left: 1%;
+}
+#container-basic-float #main-content2 div,
+#container-awesome-float #main-content2 div {
+	float: left;
+	width: 22%;
+	margin-left: 1%;
+}
+#container-basic-float #main-content3 #two-col div,
+#container-awesome-float #main-content3 #two-col div {
+	float: left;
+	width: 47%;
+	margin-left: 1%;
+}
+#container-no-float .clearfix,
+#container-basic-float .clearfix {
+}
+
+#container-no-float div.clearfix:after,
+#container-basic-float div.clearfix:after {
+}
+
+/*
+ * container-no-float
+ */
+ 
+/*
+ * container-basic-float
+ * NOTE - base all floated div widths on 98% to compensate
+ *        for the default 1% padding on divs
+ */
+#container-basic-float div.clear {
+	clear: both;
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+/*
+ * container-awesome-float
+ */
+#container-awesome-float .clearfix:after {
+	content: "";
+	display: block;
+	height: 0;
+	margin: 0;
+	padding: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+#main-content1,
+#main-content2,
+#main-content3 {
+	background-color: #eee;
+}
+
+#main-content1 #focus,
+#main-content2 #focus,
+#main-content3 #focus,
+#main-content1 #two-col,
+#main-content2 #two-col,
+#main-content3 #two-col {
+	background-color: #ddd;
+}

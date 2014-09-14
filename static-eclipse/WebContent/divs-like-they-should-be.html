@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>making divs work like you expect them to</title>
+	<link href="css/core.css" rel="StyleSheet" type="text/css">
+	<style>
+/* CSS for this page - css core.css applies to the sample page HTML */
+div {
+	border-radius: 5px;
+}
+div.section-clearfix {
+	background: url(css-images/bg_inner_buckets.png) repeat-x;
+	background-color: #023f84;
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 1em;
+}
+
+div.section-clearfix:after {
+	content: "";
+	display: block;
+	height: 0;
+	margin: 0;
+	padding: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+div.general-notes {
+	background: url(css-images/bg_inner_buckets.png) repeat-x;
+	background-color: #023f84;
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 1em;
+}
+
+h1.general-notes {
+	color: #fff;
+	background: url(css-images/bg_inner_bucket.png) repeat-x;
+}
+
+div.page-notes {
+	width: 47.5%;
+	float: left;
+	margin-right: auto;
+	background: url(css-images/bg_inner_bucket.png);
+}
+
+div.page-bookmarks {
+	float: left;
+	width: 47.5%;
+	margin-left: 1%;
+	background: url(css-images/bg_inner_bucket.png);
+}
+
+div.notes {
+	width: 190px;
+	float: left;
+	margin-left: auto;
+	background: url(css-images/bg_inner_bucket.png);
+}
+
+div.notes code,
+div.notes pre {
+	font-family: consolas; "lucida console";
+	font-weight: normal
+}
+
+div.result {
+	float: left;
+	margin-left: 10px;
+	margin-right: auto;
+	/* gets width from div id */
+}
+
+/*
+ * html-doc, css-doc, js-doc
+ */
+#html-doc,
+#css-doc,
+#js-doc {
+	width: 750px;
+	margin-left: 10px;
+	margin-right: auto;
+	margin-bottom: 1em;
+	background: url(css-images/bg_inner_nav.png) repeat-y ;
+	background-color: #b4c349;
+}
+
+#html-doc pre,
+#css-doc pre,
+#js-doc pre {
+	font-family: consolas, "lucida console";
+	font-weight: normal;
+}
+
+#popup {
+	color: #fff;
+	display: none;
+	width: 500px;
+	height: 400px;
+	padding: 1%;
+	border: solid 1px rgba(176, 195, 222, 1);
+	box-shadow: 10px 10px 5px #888;
+}
+#popup p {
+	float: right;
+	margin-right: 1%;
+}
+#popup span {
+	cursor: pointer;
+}
+#popup textarea {
+	width: 100%;
+	height: 90%;
+	resize: none;
+	font-family: consolas, 'lucida console';
+}
+	</style>
+	
+	<script type="text/javascript" src="js/core.js"></script>
+	<script type="text/javascript">
+function getStyle(el, style) {
+	if(!document.getElementById) return;
+	
+	var value = el.style[style];
+	
+	if(!value)
+		if(document.defaultView)
+			value = document.defaultView.getComputedStyle(el, "").getPropertyValue(style);
+		else if(el.currentStyle)
+	value = el.currentStyle[toCamelCase(style)];
+	
+	return value;
+}
+
+function showDownloadPopup(elementId, data) {
+	var rdDiv = document.getElementById(elementId);
+	var rdText = document.querySelector("textarea");
+	var cursorX;
+	var cursorY;
+	rdText.value = data;
+	
+	/* e.g.
+	 * client x/y: 									87/280
+	 * document element scrollLeft/scrollTop: 		0/0
+	 * body scrollLeft/scrollTop: 					0/4297
+	 * document element scrollWidth/scrollHeight: 	1031/5865
+	 * body scrollWidth/scrollHeight: 				1032/5835
+	 * cursor x/y: (87+0+0)/(280+0+4297)
+	 * means document element scrollLeft and scrollTop are the top coordinates
+	 *   of the page, and body scrollLeft and scrollTop are the top coordinates
+	 *   of the displayed area
+	 * scrollWidth and scrollHeight must be the total page size (maybe?)
+	 * coordinates and size of displayed html window:
+	 * top left x/y: document.documentElement.scrollLeft/document.documentElement.scrollTop
+	 * displayed height/width: document.documentElement.width/document.documentElement.height
+	 */
+
+	/*
+	alert("client (mouse) x/y: " + window.event.clientX + "/" + window.event.clientY + "\n" +
+		  "document element scrollLeft/scrollTop: " + document.documentElement.scrollLeft + "/" + document.documentElement.scrollTop + "\n" +
+		  "body scrollLeft/scrollTop: " + document.body.scrollLeft + "/" + document.body.scrollTop + "\n" +
+		  "document element scrollWidth/scrollHeight: " + document.documentElement.scrollWidth + "/" + document.documentElement.scrollHeight + "\n" +
+		  "body scrollWidth/scrollHeight: " + document.body.scrollWidth + "/" + document.body.scrollHeight + "\n" +
+		  "document element clientWidth/clientHeight: " + document.documentElement.clientWidth + "/" + document.documentElement.clientHeight + "\n" +
+		  "body clientWidth/clientHeight: " + document.body.clientWidth + "/" + document.body.clientHeight);
+	 */
+	 
+	if (window.event) {
+		cursorX = window.event.clientX +
+		          document.documentElement.scrollLeft +
+		          document.body.scrollLeft;
+		cursorY = window.event.clientY +
+		          document.documentElement.scrollTop +
+		          document.body.scrollTop;
+	}
+	rdDiv.style.left = cursorX + "px";
+	rdDiv.style.top = cursorY + "px";
+	 //document.defaultView.getComputedStyle(el, "").getPropertyValue(style);
+	/*
+	alert("rdDiv dimensions:\n" +
+			  "top corner x/y: " + rdDiv.style.left + "/" + rdDiv.style.top + "\n" +
+			  "width/height: " + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("width") + "/" + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("height"));
+	 */
+	rdDiv.style.position = "absolute";
+	rdDiv.style.display = "block";
+}
+
+function closeDownloadPopup(elementId) {
+	var rdDiv = document.getElementById(elementId);
+	rdDiv.style.display = "none";
+}
+	</script>
+</head>
+
+<body onload="initPage()">
+
+<div class="general-notes section-clearfix">
+	<h1 class="general-notes">making divs work like you expect them to</h1>
+	<div class="page-notes">
+		<h2 style="color: #fff">page notes</h2>
+		<p>All divs in the sample page have the <code>outline</code> class, which outlines
+		   every div in blue. This is there for debugging/visualization purposes. The advantage
+		   of <code>outline</code> over <code>border</code> for framing divs (to see their
+		   bounds and contents) is that id doesn't affect the overall size of the div,
+		   so it can be added and removed from divs without needing a div size adjustment
+		   to keep the float widths working.
+		</p>
+	</div>
+	<div class="page-bookmarks">
+		<h2 style="color: #fff">page sections</h2>
+		<ul>
+			<li><a href="#container-no-float">basic div grouping</a></li>
+			<li><a href="#container-basic-float">div grouping with floats and clear</a></li>
+			<li><a href="#container-awesome-float">let the clearfix div magic begin</a></li>
+			<li><a href="#html-doc">the sample page HTML doc</a></li>
+			<li><a href="#css-doc">the sample page CSS code</a></li>
+			<li><a href="#js-doc">the sample page javascript code</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff">basic div grouping</h2>
+		<ul>
+			<li>no floating divs, just tags with ids and classes</li>
+			<li>main content area 1
+				<ul>
+					<li>left sidebar</li>
+					<li>focus area with content and right sidebar</li>
+				</ul>
+			</li>
+			<li>main content area 2
+				<ul>
+					<li>four inner divs</li>
+				</ul>
+			</li>
+			<li>main content area 3
+				<ul>
+					<li>inner div with two cols</li>
+					<li>full-span div</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div id="container-no-float" class="result">
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff">div grouping with floats and clear</h2>
+		<p>
+		You can lay divs out side-by-side using float, but once you deploy
+		<code>clear: both</code>, all bets are off for getting floated divs
+		to live inside a bounding div.
+		</p>
+	</div>
+	<div id="container-basic-float" class="result">
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff">let the clearfix div magic begin</h2>
+		<p>
+		This time divs will be rendered using the "clearfix" class, which in the css is defined as follows:
+		</p>
+		<pre>
+.clearfix:after {
+    content: "";
+    display: block;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    clear: both;
+    visibility: hidden;
+}
+		</pre>
+		<p>
+		The "clearfix" class should be applied to any div that contains floated divs.  I need to look
+		into it further, but I believe the magic is in the "content" attribute of the pseudo ":after"
+		class.  It forces the empty string to be written after the div that uses this class.
+		</p>
+	</div>
+	
+	<div id="container-awesome-float" class="result">
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff;">the sample page HTML doc</h2>
+		<span style="cursor: pointer;"
+		      onclick="showDownloadPopup('popup', pageData);">Copy HTML to clipboard</span>
+	</div>
+	<div id="html-doc" class="result">
+		<pre id="html-doc-pre">
+		</pre>
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff;">the sample page CSS</h2>
+		<span style="cursor: pointer;"
+		      onclick="showDownloadPopup('popup', cssData);">Copy CSS to clipboard</span>
+	</div>
+	<div id="css-doc" class="result">
+		<pre id="css-doc-pre">
+		</pre>
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff;">the sample page javascript code</h2>
+		<span style="cursor: pointer;"
+		      onclick="showDownloadPopup('popup', jsData);">Copy javascript to clipboard</span>
+	</div>
+	<div id="js-doc" class="result">
+		<pre id="js-doc-pre">
+		</pre>
+	</div>
+</div>
+
+<div id="popup" class="section-clearfix" onkeypress="alert('holo');">
+	<p>
+	close window <span onclick="closeDownloadPopup('popup')">[X]</span>
+	</p>
+	
+	<textarea readonly></textarea>
+</div>
+
+</body>
+</html>
