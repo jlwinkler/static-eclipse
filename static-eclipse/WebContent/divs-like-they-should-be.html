@@ -144,32 +144,6 @@ function showDownloadPopup(elementId, data) {
 	var cursorY;
 	rdText.value = data;
 	
-	/* e.g.
-	 * client x/y: 									87/280
-	 * document element scrollLeft/scrollTop: 		0/0
-	 * body scrollLeft/scrollTop: 					0/4297
-	 * document element scrollWidth/scrollHeight: 	1031/5865
-	 * body scrollWidth/scrollHeight: 				1032/5835
-	 * cursor x/y: (87+0+0)/(280+0+4297)
-	 * means document element scrollLeft and scrollTop are the top coordinates
-	 *   of the page, and body scrollLeft and scrollTop are the top coordinates
-	 *   of the displayed area
-	 * scrollWidth and scrollHeight must be the total page size (maybe?)
-	 * coordinates and size of displayed html window:
-	 * top left x/y: document.documentElement.scrollLeft/document.documentElement.scrollTop
-	 * displayed height/width: document.documentElement.width/document.documentElement.height
-	 */
-
-	/*
-	alert("client (mouse) x/y: " + window.event.clientX + "/" + window.event.clientY + "\n" +
-		  "document element scrollLeft/scrollTop: " + document.documentElement.scrollLeft + "/" + document.documentElement.scrollTop + "\n" +
-		  "body scrollLeft/scrollTop: " + document.body.scrollLeft + "/" + document.body.scrollTop + "\n" +
-		  "document element scrollWidth/scrollHeight: " + document.documentElement.scrollWidth + "/" + document.documentElement.scrollHeight + "\n" +
-		  "body scrollWidth/scrollHeight: " + document.body.scrollWidth + "/" + document.body.scrollHeight + "\n" +
-		  "document element clientWidth/clientHeight: " + document.documentElement.clientWidth + "/" + document.documentElement.clientHeight + "\n" +
-		  "body clientWidth/clientHeight: " + document.body.clientWidth + "/" + document.body.clientHeight);
-	 */
-	 
 	if (window.event) {
 		cursorX = window.event.clientX +
 		          document.documentElement.scrollLeft +
@@ -180,18 +154,6 @@ function showDownloadPopup(elementId, data) {
 	}
 	rdDiv.style.left = cursorX + "px";
 	rdDiv.style.top = cursorY + "px";
-	 //document.defaultView.getComputedStyle(el, "").getPropertyValue(style);
-	/*
-	alert("rdDiv dimensions:\n" +
-			  "top corner x/y: " + rdDiv.style.left + "/" + rdDiv.style.top + "\n" +
-			  "width/height: " + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("width") + "/" + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("height") + "\n" +
-			  "body clientHeight: " + document.body.clientHeight + "\n" +
-			  "body scrollHeight: " + document.body.scrollHeight + "\n" +
-			  "body scrollTop: " + document.body.scrollHeight + "\n" +
-			  "documentElement clientHeight: " + document.documentElement.clientHeight + "\n" +
-			  "documentElement scrollHeight: " + document.documentElement.scrollHeight + "\n" +
-			  "documentElement scrollTop: " + document.documentElement.scrollTop);
-	 */
 	/*
 	 * rdDiv.style.top is pixels from top of page
 	 * document.documentElement.scrollTop is height in pixels of visible portion
@@ -201,20 +163,23 @@ function showDownloadPopup(elementId, data) {
 	 * need to readjust rdDiv.style.top if rdDiv visible top coord + 500 (height of
 	 *   popup div) > document.documentElement.clientHeight
 	 * rdDiv.style.top should then be rdDiv.style.top - 400
-	 var alertStr = "rdDiv.style.top: " + rdDiv.style.top + "\n" +
-	                "documentElement.scrollTop: " + document.documentElement.scrollTop + "\n" +
-	                "document.documentElement.clientHeight: " + document.documentElement.clientHeight;
-	 alert(alertStr);
 	 */
-	 if ((cursorY - document.documentElement.scrollTop) + 400 > document.documentElement.clientHeight) {
-//		 alert("resetting popup top from " + cursorY + " to " + (cursorY - 400));
-		 rdDiv.style.top = (cursorY - 400) + "px";
-	 }
-	
+	if ((cursorY - document.documentElement.scrollTop) + 400 > document.documentElement.clientHeight) {
+		rdDiv.style.top = (cursorY - 400) + "px";
+	}
+
 	rdDiv.style.position = "absolute";
 	rdDiv.style.display = "block";
+	rdDiv.focus();
 }
 
+function closeDownloadPopupOnKeyPress(elementId) {
+	if (event.which == 27)
+		closeDownloadPopup(elementId)
+}
+function closeDownloadPopupOnClick(elementId) {
+	closeDownloadPopup(elementId);
+}
 function closeDownloadPopup(elementId) {
 	var rdDiv = document.getElementById(elementId);
 	rdDiv.style.display = "none";
@@ -324,7 +289,7 @@ function closeDownloadPopup(elementId) {
 		<h2 style="color: #fff">and finally, the column heights</h2>
 		<p>
 		So we've got divs lining up columns in divs without affecting other divs.  The
-		other thing that divs should do so that we're not tempted to design with <code>&lt;table&gt</code>
+		other thing that divs should do so that we're not tempted to design with <code>&lt;table&gt;</code>
 		elements is to have all these neat columns be equal height when you don't know the
 		content size before page rendering.
 		</p>
@@ -384,9 +349,9 @@ function closeDownloadPopup(elementId) {
 	</div>
 </div>
 
-<div id="popup" class="section-clearfix" onkeypress="alert('holo');">
+<div id="popup" class="section-clearfix" onkeypress="closeDownloadPopupOnKeyPress('popup')">
 	<p>
-	close window <span onclick="closeDownloadPopup('popup')">[X]</span>
+	close window <span onclick="closeDownloadPopupOnClick('popup')">[X]</span>
 	</p>
 	
 	<textarea readonly></textarea>
