@@ -137,53 +137,67 @@ function getStyle(el, style) {
 	return value;
 }
 
-function showDownloadPopup(elementId, data) {
+function showDownloadPopup(pEvent, elementId, data) {
 	var rdDiv = document.getElementById(elementId);
 	var rdText = document.querySelector("textarea");
-	var cursorX;
-	var cursorY;
+	var mouseX = pEvent.clientX;
+	var mouseY = pEvent.clientY;
+	var viewportHSize = document.documentElement.clientWidth;
+	var viewportVSize = document.documentElement.clientHeight;
+	var popupVSize = 425;
+
 	rdText.value = data;
-	
-	if (window.event) {
-		cursorX = window.event.clientX +
-		          document.documentElement.scrollLeft +
-		          document.body.scrollLeft;
-		cursorY = window.event.clientY +
-		          document.documentElement.scrollTop +
-		          document.body.scrollTop;
-	}
-	rdDiv.style.left = cursorX + "px";
-	rdDiv.style.top = cursorY + "px";
+
 	/*
-	 * rdDiv.style.top is pixels from top of page
-	 * document.documentElement.scrollTop is height in pixels of visible portion
-	 *   of page
-	 * => top position of rdDiv in visible portion of page:
-	 *    => (rdDiv.style.top - document.documentElement.scrollTop)
-	 * need to readjust rdDiv.style.top if rdDiv visible top coord + 500 (height of
-	 *   popup div) > document.documentElement.clientHeight
-	 * rdDiv.style.top should then be rdDiv.style.top - 400
+	alert("mouse viewport xy: " + mouseX + "x" + mouseY + "\n" +
+		  "viewport size: " + viewportHSize + "x" + viewportVSize + "\n" +
+		  "viewport xy on page: " + window.pageXOffset + "x" + window.pageYOffset + "\n" +
+		  "setting poup left top to " + (mouseX + window.pageXOffset) + "x" + (mouseY + window.pageYOffset));
 	 */
-	if ((cursorY - document.documentElement.scrollTop) + 400 > document.documentElement.clientHeight) {
-		rdDiv.style.top = (cursorY - 400) + "px";
+	 
+	if ((mouseY+popupVSize) > viewportVSize) {
+		/*
+		alert("popup will run off page:\n" +
+			  "bottom of popup: " + (mouseY + popupVSize) + "\n" +
+			  "viewport bottom: " + viewportVSize);
+		 */
+		mouseY = mouseY - popupVSize;
 	}
+	
+	rdDiv.style.left = (mouseX + window.pageXOffset) + "px";
+	rdDiv.style.top = (mouseY + window.pageYOffset) + "px";
 
 	rdDiv.style.position = "absolute";
 	rdDiv.style.display = "block";
 	rdDiv.focus();
 }
 
-function closeDownloadPopupOnKeyPress(elementId) {
-	if (event.which == 27)
-		closeDownloadPopup(elementId)
+function closeDownloadPopupOnKeyDown(kpEvent, elementId) {
+//	alert("event.keycode: " + kpEvent.keyCode + " - event.which: " + kpEvent.which);
+	if (kpEvent.which == 27)
+		closeDownloadPopup(elementId);
 }
-function closeDownloadPopupOnClick(elementId) {
+function closeDownloadPopupOnClick(cEvent, elementId) {
 	closeDownloadPopup(elementId);
 }
 function closeDownloadPopup(elementId) {
 	var rdDiv = document.getElementById(elementId);
 	rdDiv.style.display = "none";
 }
+
+/*
+ * debug functions
+ */
+function showMouseCoordsInViewport(clickEvent) {
+	var alertMsg =
+		"viewport size: " + document.documentElement.clientWidth + "x" + document.documentElement.clientHeight +
+		"mouse coords relative to viewport: " + clickEvent.clientX + "x" + clickEvent.clientY +
+		"viewport scroll: " + document.documentElement.scrollLeft + "x" + document.documentElement.scrollTop;
+	alert(alertMsg);
+	
+}
+
+//window.onclick = showMouseCoordsInViewport;
 	</script>
 </head>
 
@@ -317,7 +331,7 @@ function closeDownloadPopup(elementId) {
 	<div class="notes">
 		<h2 style="color: #fff;">the sample page HTML doc</h2>
 		<span style="cursor: pointer;"
-		      onclick="showDownloadPopup('popup', pageData);">Copy HTML to clipboard</span>
+		      onclick="showDownloadPopup(event, 'popup', pageData);">Copy HTML to clipboard</span>
 	</div>
 	<div id="html-doc" class="result">
 		<pre id="html-doc-pre">
@@ -329,7 +343,7 @@ function closeDownloadPopup(elementId) {
 	<div class="notes">
 		<h2 style="color: #fff;">the sample page CSS</h2>
 		<span style="cursor: pointer;"
-		      onclick="showDownloadPopup('popup', cssData);">Copy CSS to clipboard</span>
+		      onclick="showDownloadPopup(event, 'popup', cssData);">Copy CSS to clipboard</span>
 	</div>
 	<div id="css-doc" class="result">
 		<pre id="css-doc-pre">
@@ -341,7 +355,7 @@ function closeDownloadPopup(elementId) {
 	<div class="notes">
 		<h2 style="color: #fff;">the sample page javascript code</h2>
 		<span style="cursor: pointer;"
-		      onclick="showDownloadPopup('popup', jsData);">Copy javascript to clipboard</span>
+		      onclick="showDownloadPopup(event, 'popup', jsData);">Copy javascript to clipboard</span>
 	</div>
 	<div id="js-doc" class="result">
 		<pre id="js-doc-pre">
@@ -349,9 +363,9 @@ function closeDownloadPopup(elementId) {
 	</div>
 </div>
 
-<div id="popup" class="section-clearfix" onkeypress="closeDownloadPopupOnKeyPress('popup')">
+<div id="popup" tabindex="1" class="section-clearfix" onKeyDown="closeDownloadPopupOnKeyDown(event, 'popup')">
 	<p>
-	close window <span onclick="closeDownloadPopupOnClick('popup')">[X]</span>
+	close window <span onclick="closeDownloadPopupOnClick(event, 'popup')">[X]</span>
 	</p>
 	
 	<textarea readonly></textarea>
