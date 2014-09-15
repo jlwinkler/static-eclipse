@@ -184,8 +184,33 @@ function showDownloadPopup(elementId, data) {
 	/*
 	alert("rdDiv dimensions:\n" +
 			  "top corner x/y: " + rdDiv.style.left + "/" + rdDiv.style.top + "\n" +
-			  "width/height: " + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("width") + "/" + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("height"));
+			  "width/height: " + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("width") + "/" + document.defaultView.getComputedStyle(rdDiv, "").getPropertyValue("height") + "\n" +
+			  "body clientHeight: " + document.body.clientHeight + "\n" +
+			  "body scrollHeight: " + document.body.scrollHeight + "\n" +
+			  "body scrollTop: " + document.body.scrollHeight + "\n" +
+			  "documentElement clientHeight: " + document.documentElement.clientHeight + "\n" +
+			  "documentElement scrollHeight: " + document.documentElement.scrollHeight + "\n" +
+			  "documentElement scrollTop: " + document.documentElement.scrollTop);
 	 */
+	/*
+	 * rdDiv.style.top is pixels from top of page
+	 * document.documentElement.scrollTop is height in pixels of visible portion
+	 *   of page
+	 * => top position of rdDiv in visible portion of page:
+	 *    => (rdDiv.style.top - document.documentElement.scrollTop)
+	 * need to readjust rdDiv.style.top if rdDiv visible top coord + 500 (height of
+	 *   popup div) > document.documentElement.clientHeight
+	 * rdDiv.style.top should then be rdDiv.style.top - 400
+	 var alertStr = "rdDiv.style.top: " + rdDiv.style.top + "\n" +
+	                "documentElement.scrollTop: " + document.documentElement.scrollTop + "\n" +
+	                "document.documentElement.clientHeight: " + document.documentElement.clientHeight;
+	 alert(alertStr);
+	 */
+	 if ((cursorY - document.documentElement.scrollTop) + 400 > document.documentElement.clientHeight) {
+//		 alert("resetting popup top from " + cursorY + " to " + (cursorY - 400));
+		 rdDiv.style.top = (cursorY - 400) + "px";
+	 }
+	
 	rdDiv.style.position = "absolute";
 	rdDiv.style.display = "block";
 }
@@ -217,6 +242,7 @@ function closeDownloadPopup(elementId) {
 			<li><a href="#container-no-float">basic div grouping</a></li>
 			<li><a href="#container-basic-float">div grouping with floats and clear</a></li>
 			<li><a href="#container-awesome-float">let the clearfix div magic begin</a></li>
+			<li><a href="#container-awesome-float">and finally, the column heights</a></li>
 			<li><a href="#html-doc">the sample page HTML doc</a></li>
 			<li><a href="#css-doc">the sample page CSS code</a></li>
 			<li><a href="#js-doc">the sample page javascript code</a></li>
@@ -290,6 +316,35 @@ function closeDownloadPopup(elementId) {
 	</div>
 	
 	<div id="container-awesome-float" class="result">
+	</div>
+</div>
+
+<div class="section-clearfix">
+	<div class="notes">
+		<h2 style="color: #fff">and finally, the column heights</h2>
+		<p>
+		So we've got divs lining up columns in divs without affecting other divs.  The
+		other thing that divs should do so that we're not tempted to design with <code>&lt;table&gt</code>
+		elements is to have all these neat columns be equal height when you don't know the
+		content size before page rendering.
+		</p>
+		<p>
+		There are some pure CSS solutions, but they all seem predicated on knowing which column
+		is likely to be longer.
+		</p>
+		<p>
+		Since we don't know which column is going to be longer, the best solution I found
+		was in javascript. I use <code>document.querySelector()</code> to get the elements
+		whose heights need to match, iterate over them getting the largest <code>element.offsetHeight</code> of the
+		elements, and then for each element set <code>element.style.height</code> to that
+		largest height value.
+		</p>
+		<p>
+		See the <a href="#js-doc">javascript code</a> for usage and implementation.
+		</p>
+	</div>
+	
+	<div id="container-awesome-float-with-colheight-fix" class="result">
 	</div>
 </div>
 

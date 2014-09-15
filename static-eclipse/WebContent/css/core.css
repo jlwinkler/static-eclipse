@@ -39,7 +39,8 @@ div {
  */
 div#container-no-float,
 div#container-basic-float,
-div#container-awesome-float {
+div#container-awesome-float,
+div#container-awesome-float-with-colheight-fix {
 	width: 750px;
 	margin-right: auto;
 	background: url(../css-images/bg_inner_nav.png) repeat-y ;
@@ -47,42 +48,49 @@ div#container-awesome-float {
 }
 
 #container-no-float div.clear,
-#container-awesome-float div.clear {
+#container-awesome-float div.clear,
+#container-awesome-float-with-colheight-fix div.clear {
 	height: 0;
 	margin: 0;
 	padding: 0;
 }
 
 #container-basic-float #left-sidebar,
-#container-awesome-float #left-sidebar {
+#container-awesome-float #left-sidebar,
+#container-awesome-float-with-colheight-fix #left-sidebar {
 	float: left;
 	width: 19%;
 }
 #container-basic-float #focus,
-#container-awesome-float #focus {
+#container-awesome-float #focus,
+#container-awesome-float-with-colheight-fix #focus {
 	float: left;
 	width: 76%;
 	margin-left: 1%;
 }
 #container-basic-float #focus-content,
-#container-awesome-float #focus-content {
+#container-awesome-float #focus-content,
+#container-awesome-float-with-colheight-fix #focus-content {
 	float: left;
 	width: 76%;
 }
 #container-basic-float #focus-right-sidebar,
-#container-awesome-float #focus-right-sidebar {
+#container-awesome-float #focus-right-sidebar,
+#container-awesome-float-with-colheight-fix #focus-right-sidebar {
 	float: left;
 	width: 19%;
 	margin-left: 1%;
 }
 #container-basic-float #main-content2 div,
-#container-awesome-float #main-content2 div {
+#container-awesome-float #main-content2 div,
+#container-awesome-float-with-colheight-fix #main-content2 div {
 	float: left;
 	width: 22%;
 	margin-left: 1%;
 }
 #container-basic-float #main-content3 #two-col div,
-#container-awesome-float #main-content3 #two-col div {
+#container-awesome-float #main-content3 #two-col div,
+#container-awesome-float-with-colheight-fix #main-content3 #two-col div {
 	float: left;
 	width: 47%;
 	margin-left: 1%;
@@ -114,7 +122,8 @@ div#container-awesome-float {
 /*
  * container-awesome-float
  */
-#container-awesome-float .clearfix:after {
+#container-awesome-float .clearfix:after,
+#container-awesome-float-with-colheight-fix .clearfix:after {
 	content: "";
 	display: block;
 	height: 0;

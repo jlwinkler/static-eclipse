@@ -56,6 +56,8 @@ function populatePage() {
 	setAllDivBodiesById(lsbContent, "left-sidebar");
 	var fcaContent = generateRandomContent(8, false);
 	setAllDivBodiesById(fcaContent, "focus-content");
+	var frsbContent = generateRandomContent(5, true);
+	setAllDivBodiesById(frsbContent, "focus-right-sidebar");
 }
 
 function getUrlData(url) {
@@ -67,15 +69,6 @@ function getUrlData(url) {
 	return response;
 }
 
-function fixDivHeightsOrig() {
-	var elemArray = new Array();
-	var alertString = "";
-	for (var i=0; i<arguments.length; i++) {
-		elemArray[i] = document.getElementById(arguments[i]);
-		alertString = alertString + "div " + arguments[i] + " height: " + elemArray[i].offsetHeight + "\n";
-	}
-	alert(alertString);
-}
 function fixDivHeights() {
 	/*
 	 * argument elements should be valid CSS selector strings, i.e:
@@ -130,12 +123,17 @@ function initPage() {
 	setDivBody(pageData,
 			   "container-no-float",
 			   "container-basic-float",
-			   "container-awesome-float");
+			   "container-awesome-float",
+			   "container-awesome-float-with-colheight-fix");
 	setDivBody(formatData(pageData),
 			   "html-doc-pre");
 	populatePage();
 	setDivBody(formatData(cssData), "css-doc-pre");
 	setDivBody(formatData(jsData), "js-doc-pre");
-	fixDivHeights("#container-awesome-float #left-sidebar", "#container-awesome-float #focus");
-	fixDivHeights("#container-awesome-float #focus-content", "#container-awesome-float #focus-right-sidebar");
+	fixDivHeights(".page-notes",
+				  ".page-bookmarks");
+	fixDivHeights("#container-awesome-float-with-colheight-fix #left-sidebar",
+				  "#container-awesome-float-with-colheight-fix #focus");
+	fixDivHeights("#container-awesome-float-with-colheight-fix #focus-content",
+			      "#container-awesome-float-with-colheight-fix #focus-right-sidebar");
 }
