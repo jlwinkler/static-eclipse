@@ -119,6 +119,38 @@ function formatData(body) {
 	return lines.join("");
 }
 
+function showHideOutline(divId) {
+	var div = document.querySelector(divId);
+	var outlineClass = "outline";
+	var nooutlineClass = "nooutline";
+	var oc;
+	var nc;
+	var classes = div.className;
+	if (classes.indexOf(nooutlineClass) > -1) {
+		oc = nooutlineClass;
+		nc = outlineClass;
+	} else {
+		oc = outlineClass;
+		nc = nooutlineClass;
+	}
+	
+	var childrenWithOutline = [];
+	var domChildList = div.getElementsByClassName(oc);
+	if (domChildList.length == 0) {
+		domChildList = div.getElementsByClassName(nc);
+		oc = nooutlineClass;
+		nc = outlineClass;
+	}
+	// is this returning a reference that is being updated?
+	for (var i=0; i<domChildList.length; i++) {
+		childrenWithOutline[i] = domChildList[i];
+	};
+	for (var i=0; i<childrenWithOutline.length; i++) {
+		childrenWithOutline[i].className = childrenWithOutline[i].className.replace(oc, nc);
+	}
+	
+}
+
 function initPage() {
 	setDivBody(pageData,
 			   "container-no-float",

@@ -232,6 +232,7 @@ function showMouseCoordsInViewport(clickEvent) {
 <div class="section-clearfix">
 	<div class="notes">
 		<h2 style="color: #fff">basic div grouping</h2>
+		<p style="cursor: pointer" onclick="showHideOutline('#container-no-float')">show/hide outline</p>
 		<ul>
 			<li>no floating divs, just tags with ids and classes</li>
 			<li>main content area 1
@@ -260,6 +261,7 @@ function showMouseCoordsInViewport(clickEvent) {
 <div class="section-clearfix">
 	<div class="notes">
 		<h2 style="color: #fff">div grouping with floats and clear</h2>
+		<p style="cursor: pointer" onclick="showHideOutline('#container-basic-float')">show/hide outline</p>
 		<p>
 		You can lay divs out side-by-side using float, but once you deploy
 		<code>clear: both</code>, all bets are off for getting floated divs
@@ -273,6 +275,7 @@ function showMouseCoordsInViewport(clickEvent) {
 <div class="section-clearfix">
 	<div class="notes">
 		<h2 style="color: #fff">let the clearfix div magic begin</h2>
+		<p style="cursor: pointer" onclick="showHideOutline('#container-awesome-float')">show/hide outline</p>
 		<p>
 		This time divs will be rendered using the "clearfix" class, which in the css is defined as follows:
 		</p>
@@ -301,6 +304,7 @@ function showMouseCoordsInViewport(clickEvent) {
 <div class="section-clearfix">
 	<div class="notes">
 		<h2 style="color: #fff">and finally, the column heights</h2>
+		<p style="cursor: pointer" onclick="showHideOutline('#container-awesome-float-with-colheight-fix')">show/hide outline</p>
 		<p>
 		So we've got divs lining up columns in divs without affecting other divs.  The
 		other thing that divs should do so that we're not tempted to design with <code>&lt;table&gt;</code>
